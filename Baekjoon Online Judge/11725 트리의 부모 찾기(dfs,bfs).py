@@ -1,4 +1,5 @@
 # 재귀 DFS로 구현하면 recursionlimit 설정이 필요하다.
+# while, stack을 이용해서 DFS 구현 시 런타임에러 발생하지 않음.
 # BFS 풀이도 추가할 것.
 
 import sys
