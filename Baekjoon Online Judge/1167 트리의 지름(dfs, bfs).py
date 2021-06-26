@@ -51,3 +51,41 @@ visited[max_[1]] = True
 dfs(max_[1], 0)
 
 print(max_[0])
+
+
+# BFS 풀이
+# DFS와 원리 동일
+# 노드와 노드 사이의 거리는 방문 순서와 무관하기 때문에 DFS, BFS 둘 다 사용 가능.
+
+import sys
+from collections import deque
+
+def bfs(start, N):
+    queue = deque()
+    queue.append(start)
+    visited = [False] * (N + 1)
+    visited[start] = 1
+
+    while queue:
+        visit = queue.popleft()
+        for node, weight in graph[visit]:
+            if visited[node] == False:
+                queue.append(node)
+                visited[node] = visited[visit] + weight
+    max_length = max(visited)
+    max_node = visited.index(max_length)
+
+    return (max_length, max_node)
+
+V = int(input())
+graph = [[] for _ in range(V + 1)]
+
+for i in range(V):
+    node_ = list(map(int, sys.stdin.readline().split()))
+    for j in range(1, len(node_)-1, 2):
+        graph[node_[0]].append([node_[j], node_[j + 1]])
+
+length, node = bfs(1, V)
+radius, node = bfs(node, V)
+
+print(radius - 1)
