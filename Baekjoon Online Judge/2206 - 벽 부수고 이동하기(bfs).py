@@ -44,15 +44,14 @@ while queue:
         x_ = x + dx[i]
         y_ = y + dy[i]
 
-        if 0 <= x_ < N and 0 <= y_ < M:
-            if visited[z][x_][y_] == 0:
-                if map_[x_][y_] == '0':
-                    visited[z][x_][y_] = visited[z][x][y] + 1
-                    queue.append([z, x_, y_])
+        if 0 <= x_ < N and 0 <= y_ < M and visited[z][x_][y_] == 0:
+            if map_[x_][y_] == '0':
+                visited[z][x_][y_] = visited[z][x][y] + 1
+                queue.append([z, x_, y_])
 
-                if z == 0 and map_[x_][y_] == '1':
-                    visited[1][x_][y_] = visited[z][x][y] + 1
-                    queue.append([1, x_, y_])
+            if z == 0 and map_[x_][y_] == '1':
+                visited[1][x_][y_] = visited[z][x][y] + 1
+                queue.append([1, x_, y_])
 
 sol_1 = visited[0][N-1][M-1]
 sol_2 = visited[1][N-1][M-1]
