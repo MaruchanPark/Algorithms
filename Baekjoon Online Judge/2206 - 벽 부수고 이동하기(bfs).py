@@ -17,47 +17,51 @@ N×M의 행렬로 표현되는 맵이 있다. 맵에서 0은 이동할 수 있�
 첫째 줄에 최단 거리를 출력한다. 불가능할 때는 -1을 출력한다.
 '''
 
-# visited를 NxMx2의 행렬로 만든다.
-# 마지막 성분은 w로 인덱싱
-# w가 0일 때는 벽을 부수지 않은 최단거리, w가 1일 때는 벽을 부순 최단거리를 BFS로 탐색하면서 업데이트 한다.
+# 벽을 부순 경우, 벽을 부수지 않은 경우에 대한 2xNxM 리스트에 거리를 기록하며 BFS 탐색을 한다.
+# 벽을 부수지 않았을 때는 벽을 부수고 이동, 부수지 않고 이동하는 경우를 큐에 추가.
+# 벽을 이미 부쉈을 때는 벽을 부수지 않고 이동하는 경우만 큐에 추가.
+# 최종 위치에서 더 작은 거리가 정답이 된다. (0인 경우는 이동하지 못하는 경우이므로 제외)
 
-import sys
 from collections import deque
 
-N, M = map(int, sys.stdin.readline().split())
+N, M = map(int, input().split())
 map_ = []
-
 for i in range(N):
-    map_.append(sys.stdin.readline().rstrip())
+    map_.append(input())
+
+visited = [[[0] * M for _ in range(N)] for _ in range(2)]
+queue = deque()
+queue.append([0,0,0])
+visited[0][0][0] = 1
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
-queue = deque()
-visited = [[[0, 0] for _ in range(M)] for _ in range(N)]
-visited[0][0][1] = 1
-queue.append([0, 0, 1])
-
 while queue:
-    x, y, w = queue.popleft()
-
-    if x == N-1 and y == M-1:
-        result = visited[x][y][w]
-        break
+    z,x,y = queue.popleft()
 
     for i in range(4):
         x_ = x + dx[i]
         y_ = y + dy[i]
 
         if 0 <= x_ < N and 0 <= y_ < M:
-            if w == 1 and map_[x_][y_] == '1' and visited[x_][y_][0] == 0:
-                visited[x_][y_][0] = visited[x][y][w] + 1
-                queue.append([x_, y_, 0])
+            if visited[z][x_][y_] == 0:
+                if map_[x_][y_] == '0':
+                    visited[z][x_][y_] = visited[z][x][y] + 1
+                    queue.append([z, x_, y_])
 
-            elif map_[x_][y_] == '0' and visited[x_][y_][w] == 0:
-                visited[x_][y_][w] = visited[x][y][w] + 1
-                queue.append([x_, y_, w])
+                if z == 0 and map_[x_][y_] == '1':
+                    visited[1][x_][y_] = visited[z][x][y] + 1
+                    queue.append([1, x_, y_])
 
-    result = -1
+sol_1 = visited[0][N-1][M-1]
+sol_2 = visited[1][N-1][M-1]
 
-print(result)
+if sol_1 == 0 and sol_2 == 0:
+    print(-1)
+
+elif sol_1 != 0 and sol_2 != 0:
+    print(min(sol_1, sol_2))
+
+else:
+    print(max(sol_1, sol_2))
