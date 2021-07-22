@@ -11,34 +11,34 @@
 출력
 수빈이가 동생을 찾는 가장 빠른 시간을 출력한다.
 '''
-#BFS로 K까지 탐색한 횟수가 가장 빠른 시간이다.
+
+# 모든 이동 방법에 대해 처음 방문하는 곳만 BFS로 탐색할 때 가장 먼저 도착한 경로가 정답이다.
 
 from collections import deque
 
 N, K = map(int, input().split())
 
+visited = [0] * (100001)
 queue = deque()
-visited = [False] * 100001
-rep = [0] * 100001
+
 queue.append([N, 0])
+visited[N] = -1
 
 while queue:
     visit = queue.popleft()
-    if visited[visit[0]] == False:
-        visited[visit[0]] = True
-    else:
-        continue
-
-    if visit[0] == K:
+    n = visit[0]
+    if n == K:
         print(visit[1])
         break
 
-    else:
-        if visit[0] + 1 <= 100000 and visited[visit[0] + 1] == False:
-            queue.append([visit[0] + 1, visit[1] + 1])
+    if 0 <= n-1 and visited[n - 1] == False:
+        visited[n - 1] = True
+        queue.append([n-1, visit[1] + 1])
 
-        if visit[0] - 1 >= 0 and visited[visit[0] - 1] == False:
-            queue.append([visit[0] - 1, visit[1] + 1])
+    if n+1 <= 100000 and visited[n + 1] == False:
+        visited[n + 1] = True
+        queue.append([n+1, visit[1] + 1])
 
-        if visit[0] * 2 <= 100000 and visited[visit[0] * 2] == False:
-            queue.append([visit[0] * 2, visit[1] + 1])
+    if n*2 <= 100000 and visited[n*2] == False:
+        visited[n*2] = True
+        queue.append([n*2, visit[1] + 1])
