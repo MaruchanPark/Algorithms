@@ -11,6 +11,7 @@ questions = [
     "https://www.acmicpc.net/problem/2110",
     "https://www.acmicpc.net/problem/1806",
     "https://www.acmicpc.net/problem/1655",
+    "https://www.acmicpc.net/problem/2206",
 ]
 
 print(random.choice(questions))
